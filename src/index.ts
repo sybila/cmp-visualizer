@@ -2,48 +2,18 @@
  * Contains main React element.
  **/
 
-import React from "react";
+import * as React from "react";
 
 import { tinycolor } from "tinycolor2";
 import Plotly from "plotly.js";
-import Immutable from "immutable";
+import * as Immutable from "immutable";
 import createPlotlyComponent from "react-plotly.js/factory";
 
-import { DataSource } from "./get-data.ts";
+import { DataSource } from "./get-data";
+import { visibility, interpolation, axisType, addDataEnum } from "./config";
+import { VisualizerProps, VisualizerState } from "./types";
 
 const Plot = createPlotlyComponent(Plotly);
-
-// Visibility of a graphset
-const visibility = {
-  displayed: { name: "displayed", buttonColor: "blue" },
-  background: { name: "background", buttonColor: "lightblue" },
-  hidden: { name: "hidden", buttonColor: "lightgrey" },
-};
-
-const interpolation = {
-  none: { name: "none", mode: "markers", lineShape: "linear" },
-  linear: { name: "linear", mode: "lines", lineShape: "linear" },
-  spline: { name: "spline", mode: "lines", lineShape: "spline" },
-};
-
-const axisType = {
-  linear: { name: "linear", value: "linear" },
-  logarithmic: { name: "logarithmic", value: "log" },
-};
-
-const addDataEnum = {
-  none: 10, // Dialog to add another model/experiment is closed
-  model: 11, // Add a model
-  experiment: 12, // Add an experiment
-};
-
-((visibility.displayed.next = visibility.background).next =
-  visibility.hidden).next = visibility.displayed;
-
-((interpolation.none.next = interpolation.linear).next =
-  interpolation.spline).next = interpolation.none;
-
-(axisType.linear.next = axisType.logarithmic).next = axisType.linear;
 
 // Fake data for models/experiments that are being loaded
 const loadingData = processData({
@@ -81,11 +51,17 @@ function processData(data) {
  * width: width of the element
  * height: height of the element
  */
-export default class Visualizer extends React.Component {
-  constructor(...rest) {
-    super(...rest);
+export default class Visualizer extends React.Component<
+  VisualizerProps,
+  VisualizerState
+> {
+  private Data: DataSource;
+  private actions: any;
 
-    this.Data = new DataSource(this.props.dataSource);
+  constructor(props) {
+    super(props);
+
+    this.Data = new DataSource(this.props.inputData);
     console.log(this.Data);
 
     if (this.props.models.length > 2) this.props.models.length = 2;
@@ -109,23 +85,6 @@ export default class Visualizer extends React.Component {
       a.datasets ? processData(a) : loadingData
     );
 
-    this.state = {
-      models: Immutable.List(processedModels), // Loaded (or to be loaded) models and experiments
-      linkedData: null, // Models and experiments related to this.state.models
-      interpolation: interpolation.spline,
-      axisType: axisType.linear,
-      y: null, // Or [ yMin, yMax ]
-      x: null, // Or [ xMin, xMax ]
-      dragMode: "pan",
-      addData: addDataEnum.none, // See the enum
-      addDataId: "", // Id of the model/experiment to be loaded
-      exportData: false, // True if dialog to export data is open
-      exportWhole: true,
-      plotDivId: "plotDivId" + Math.random(),
-      xAxis: "0,0",
-      xDataset: "0",
-    };
-
     this.actions = {
       toggleLegendItem: this.toggleLegendItem.bind(this),
       toggleDatasetVisibility: this.toggleDatasetVisibility.bind(this),
@@ -141,6 +100,24 @@ export default class Visualizer extends React.Component {
       toggleExportData: this.toggleExportData.bind(this),
       setExport: this.setExport.bind(this),
       exportData: this.exportData.bind(this),
+    };
+
+    this.state = {
+      models: Immutable.List(processedModels), // Loaded (or to be loaded) models and experiments
+      linkedData: null, // Models and experiments related to this.state.models
+      interpolation: interpolation.spline,
+      axisType: axisType.linear,
+      y: null, // Or [ yMin, yMax ]
+      x: null, // Or [ xMin, xMax ]
+      dragMode: "pan",
+      addData: addDataEnum.none, // See the enum
+      addDataId: "", // Id of the model/experiment to be loaded
+      exportData: false, // True if dialog to export data is open
+      exportWhole: true,
+      plotDivId: "plotDivId" + Math.random(),
+      xAxis: "0,0",
+      xDataset: "0",
+      exportFormat: "",
     };
   }
 
@@ -201,7 +178,7 @@ export default class Visualizer extends React.Component {
   }
 
   setXY(x, y, cb) {
-    let obj = { dragMode: "pan" };
+    let obj: any = { dragMode: "pan" };
 
     x !== undefined && (obj.x = x);
     y !== undefined && (obj.y = y);
@@ -210,7 +187,7 @@ export default class Visualizer extends React.Component {
   }
 
   setXAxis(xAxis, xDataset) {
-    const obj = {};
+    const obj: any = {};
 
     if (xDataset === undefined) {
       obj.xAxis = xAxis;
@@ -234,9 +211,9 @@ export default class Visualizer extends React.Component {
     if (this.state.linkedData === null) {
       const linkedData = [{ id: "", name: "(select)" }];
 
-      function isDuplicate(model) {
+      const isDuplicate = (model) => {
         return linkedData.some((a) => a.id == model.id);
-      }
+      };
 
       (
         await Promise.all(
@@ -249,7 +226,7 @@ export default class Visualizer extends React.Component {
               : this.Data.findExperiments)(model.id);
           })
         )
-      ).forEach((modelArr) => {
+      ).forEach((modelArr: any) => {
         modelArr &&
           modelArr.forEach((model) => {
             isDuplicate(model) || linkedData.push(model);
@@ -263,7 +240,7 @@ export default class Visualizer extends React.Component {
   }
 
   setAddDataId(linkedData) {
-    const obj = { addDataId: linkedData };
+    // const obj = { addDataId: linkedData };
 
     if (typeof linkedData == "number") {
       this.setState({
@@ -299,21 +276,24 @@ export default class Visualizer extends React.Component {
       ) {
         this.setXY(null, null, () => setTimeout(exportPng, 80));
       } else exportPng();
-    } else if (this.state.exportFormat)
-      this.Data.doExport(
-        this.state.exportFormat,
-        this.state.models
-          .map((m) => {
-            const { id, model } = m.get("orig");
+    } else {
+      if (this.state.exportFormat) {
+        this.Data.doExport(
+          this.state.exportFormat,
+          this.state.models
+            .map((m) => {
+              const { id, model } = m.get("orig");
 
-            return { id, model };
-          })
-          .toJS()
-      );
+              return { id, model };
+            })
+            .toJS()
+        );
+      }
+    }
   }
 
   setExport(whole, format) {
-    const obj = {};
+    const obj: any = {};
 
     whole === undefined || (obj.exportWhole = whole);
     format === undefined || (obj.exportFormat = format);
@@ -405,7 +385,7 @@ export default class Visualizer extends React.Component {
   }
 }
 
-class XAxisChooser extends React.Component {
+class XAxisChooser extends React.Component<any, any> {
   render() {
     const onChange = (e) => this.props.actions.setXAxis(e.target.value);
 
@@ -429,7 +409,7 @@ class XAxisChooser extends React.Component {
             )
         ),
         " ",
-        React.createElement(DatasetChooser, this.props)
+        React.createElement(DatasetChooser, { ...this.props })
       );
     }
 
@@ -464,7 +444,7 @@ class XAxisChooser extends React.Component {
   }
 }
 
-class DatasetChooser extends React.Component {
+class DatasetChooser extends React.Component<any, any> {
   render() {
     if (
       this.props.state.xAxis == "" ||
@@ -478,7 +458,8 @@ class DatasetChooser extends React.Component {
     return React.createElement(
       "select",
       {
-        onChange: (e) => this.props.actions.setXAxis(undefined, e.target.value),
+        onChange: (e: any) =>
+          this.props.actions.setXAxis(undefined, e.target.value),
       },
       datasets.map((dset, i) =>
         React.createElement("option", { key: i, value: i }, dset.name)
@@ -487,7 +468,7 @@ class DatasetChooser extends React.Component {
   }
 }
 
-class DialogAddModel extends React.Component {
+class DialogAddModel extends React.Component<any, any> {
   render() {
     return React.createElement(
       "div",
@@ -539,7 +520,7 @@ class DialogAddModel extends React.Component {
   }
 }
 
-class DialogExport extends React.Component {
+class DialogExport extends React.Component<any, any> {
   render() {
     return React.createElement(
       "div",
@@ -604,7 +585,7 @@ class DialogExport extends React.Component {
 /**
  * Displays datasets and graphsets of a model and enables their manipulation.
  */
-class ModelOptions extends React.Component {
+class ModelOptions extends React.Component<any, any> {
   render() {
     return React.createElement(
       "div",
@@ -619,7 +600,7 @@ class ModelOptions extends React.Component {
 /**
  * Draws a button.
  */
-class Button extends React.Component {
+class Button extends React.Component<any, any> {
   render() {
     const props = this.props;
 
@@ -638,7 +619,7 @@ class Button extends React.Component {
 /**
  * Displays datasets of a model and enables their manipulation.
  */
-class ModelDatasets extends React.Component {
+class ModelDatasets extends React.Component<any, any> {
   render() {
     const props = this.props;
 
@@ -668,7 +649,7 @@ class ModelDatasets extends React.Component {
 /**
  * Displays graphsets of a model and enables their manipulation.
  */
-class ModelGraphsets extends React.Component {
+class ModelGraphsets extends React.Component<any, any> {
   render() {
     let graphsetIndex = -1;
 
@@ -736,7 +717,7 @@ class ModelGraphsets extends React.Component {
 /**
  * Legend item.
  */
-class LegendItem extends React.Component {
+class LegendItem extends React.Component<any, any> {
   render() {
     const props = this.props;
 
@@ -760,9 +741,9 @@ class LegendItem extends React.Component {
 /**
  * Graph.
  */
-class Graph extends React.Component {
+class Graph extends React.Component<any, any> {
   render() {
-    const data = [];
+    const data: any[] = [];
     const [xMIndex, xTIndex] = this.props.state.xAxis.split(",");
     const xAxis =
       this.props.state.xAxis == ""
@@ -870,7 +851,7 @@ class Graph extends React.Component {
 /**
  * Creates buttons at the bottom of the visualizer.
  */
-class GlobalSettings extends React.Component {
+class GlobalSettings extends React.Component<any, any> {
   render() {
     return React.createElement(
       "div",
