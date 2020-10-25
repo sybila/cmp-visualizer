@@ -1,0 +1,48 @@
+{
+  "name": "@sybila/cmp-visualizer",
+  "version": "1.0.0",
+  "description": "Plotly.js visualizer used for mathematical models describing particular parts of biological processes and time-series data from wet-lab experiments.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "build": "npm run build:types && npm run build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sybila/cmp-visualizer"
+  },
+  "author": "Jozef Mikušinec",
+  "contributors": [
+    {
+      "name": "Martin Petr",
+      "email": "martin.petr.276@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@types/react": "^16.9.50",
+    "@types/react-dom": "^16.9.8",
+    "plotly.js": "^1.57.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-plotly.js": "^2.5.0",
+    "tinycolor2": "^1.4.2",
+    "immutable": "^4.0.0-rc.12"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "@babel/preset-typescript": "^7.8.3",
+    "@babel/preset-react": "^7.12.1",
+    "babel-preset-minify": "^0.5.0",
+    "typescript": "^3.7.5"
+  }
+}
