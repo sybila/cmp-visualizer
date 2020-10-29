@@ -4,7 +4,6 @@
 
 import * as React from "react";
 
-import Plotly from "plotly.js";
 import * as Immutable from "immutable";
 
 import { DataSource } from "./get-data";

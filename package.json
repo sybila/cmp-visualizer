@@ -10,40 +10,43 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
-    "build": "npm run build:types && npm run build:js",
-    "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
+    "build": "webpack --progress --mode=production"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sybila/cmp-visualizer"
   },
-  "author": "Jozef Mikušinec",
+  "author": {
+    "name": "Martin Petr",
+    "email": "martin.petr.276@gmail.com"
+  },
   "contributors": [
-    {
-      "name": "Martin Petr",
-      "email": "martin.petr.276@gmail.com"
-    }
+    "Jozef Mikušinec"
   ],
   "license": "MIT",
   "dependencies": {
     "@types/react": "^16.9.50",
     "@types/react-dom": "^16.9.8",
+    "core-js": "^3.6.5",
+    "immutable": "^4.0.0-rc.12",
     "plotly.js": "^1.57.1",
+    "plotly.js-basic-dist": "^1.57.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-plotly.js": "^2.5.0",
-    "tinycolor2": "^1.4.2",
-    "immutable": "^4.0.0-rc.12"
+    "tinycolor2": "^1.4.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.3",
     "@babel/core": "^7.8.3",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
-    "@babel/preset-typescript": "^7.8.3",
     "@babel/preset-react": "^7.12.1",
+    "@babel/preset-typescript": "^7.8.3",
+    "babel-loader": "^8.1.0",
     "babel-preset-minify": "^0.5.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "webpack": "^5.3.1",
+    "webpack-cli": "^4.1.0"
   }
 }
