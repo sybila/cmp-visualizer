@@ -3,7 +3,10 @@
  **/
 
 import * as React from "react";
+import Plotly from "plotly.js-basic-dist";
+import createPlotlyComponent from "react-plotly.js/factory";
 
+const Plot = createPlotlyComponent(Plotly);
 import * as Immutable from "immutable";
 
 import { DataSource } from "./get-data";
