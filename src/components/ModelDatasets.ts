@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "./Buttons";
+import { Button } from "./Button";
 
 /**
  * Displays datasets of a model and enables their manipulation.

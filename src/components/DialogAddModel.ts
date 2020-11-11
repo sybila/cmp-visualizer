@@ -1,6 +1,6 @@
 import * as React from "react";
 import { addDataEnum } from "../config";
-import { Button } from "./Buttons";
+import { Button } from "./Button";
 import { loadingLinkedData } from "../index";
 
 export class DialogAddModel extends React.Component<any, any> {

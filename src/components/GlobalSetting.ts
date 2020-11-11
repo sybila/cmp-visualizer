@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "./Buttons";
+import { Button } from "./Button";
 
 /**
  * Creates buttons at the bottom of the visualizer.

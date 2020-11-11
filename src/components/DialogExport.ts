@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "./Buttons";
+import { Button } from "./Button";
 
 export class DialogExport extends React.Component<any, any> {
   render() {

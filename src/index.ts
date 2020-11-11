@@ -16,7 +16,7 @@ import { DialogAddModel } from "./components/DialogAddModel";
 import { DialogExport } from "./components/DialogExport";
 import { ModelOptions } from "./components/ModelOptions";
 import { XAxisChooser } from "./components/XAxisChooser";
-import { Button } from "./components/Buttons";
+import { Button } from "./components/Button";
 import { Graph } from "./components/Graph";
 import { GlobalSettings } from "./components/GlobalSetting";
 
