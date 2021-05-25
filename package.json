@@ -1,6 +1,6 @@
 {
   "name": "cmp-visualizer",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Plotly.js visualizer used for mathematical models describing particular parts of biological processes and time-series data from wet-lab experiments.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
