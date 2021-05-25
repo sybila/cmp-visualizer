@@ -1,3 +1,5 @@
+import { DataSource } from "./get-data";
+
 /** Expected data format of models/experiments returned by the functions getModel
  * and getExperiment */
 export type DataItem = {

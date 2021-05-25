@@ -69,23 +69,7 @@ export default class Visualizer extends React.Component<
     super(props);
 
     this.Data = new DataSource(this.props.inputData);
-
     if (this.props.models.length > 2) this.props.models.length = 2;
-
-    // Load models/experiments
-    this.props.models.forEach((model, i) => {
-      if (!model.datasets) {
-        (async () => {
-          model = await (model.model
-            ? this.Data.getModel
-            : this.Data.getExperiment)(model.id);
-
-          this.setState({
-            models: this.state.models.set(i, processData(model)),
-          });
-        })();
-      }
-    });
 
     const processedModels = this.props.models.map((a) =>
       a.datasets ? processData(a) : loadingData
@@ -127,8 +111,31 @@ export default class Visualizer extends React.Component<
     };
   }
 
-  componentDidUpdate() {
-    this.Data = new DataSource(this.props.inputData);
+  loadModels() {
+    this.props.models.forEach((model, i) => {
+      if (!model.datasets) {
+        (async () => {
+          model = this.props.inputData[model.id];
+
+          this.setState({
+            models: this.state.models.set(i, processData(model)),
+          });
+        })();
+      }
+    });
+  }
+
+  componentDidMount() {
+    this.loadModels();
+  }
+
+  componentDidUpdate(prevProps) {
+    // Load models/experiments
+    if (
+      JSON.stringify(prevProps.inputData) !==
+      JSON.stringify(this.props.inputData)
+    )
+      this.loadModels();
   }
 
   // Changes visibility of one trace in the graph.
@@ -312,12 +319,9 @@ export default class Visualizer extends React.Component<
   }
 
   async addData() {
-    const fn =
-      this.state.addData === addDataEnum.model
-        ? this.Data.getModel
-        : this.Data.getExperiment;
+    const fn = (id) => this.props.inputData[id];
 
-    const model = processData(await fn(this.state.addDataId));
+    const model = processData(fn(this.state.addDataId));
 
     this.setState({
       models: this.state.models.push(model),
@@ -329,7 +333,7 @@ export default class Visualizer extends React.Component<
   }
 
   render() {
-    if (!this.Data) return React.createElement("div");
+    if (!this.props.inputData) return React.createElement("div");
     return React.createElement(
       "div",
       {

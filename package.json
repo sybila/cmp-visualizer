@@ -1,6 +1,6 @@
 {
   "name": "cmp-visualizer",
-  "version": "1.0.10",
+  "version": "1.1.2",
   "description": "Plotly.js visualizer used for mathematical models describing particular parts of biological processes and time-series data from wet-lab experiments.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,6 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
-    "prepublish": "rm -rf ./dist && npm run build",
     "build": "webpack --progress --mode=production"
   },
   "repository": {
