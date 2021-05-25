@@ -1,6 +1,6 @@
 {
   "name": "cmp-visualizer",
-  "version": "1.0.7",
+  "version": "1.0.10",
   "description": "Plotly.js visualizer used for mathematical models describing particular parts of biological processes and time-series data from wet-lab experiments.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -40,16 +40,16 @@
   "devDependencies": {
     "@babel/cli": "^7.8.3",
     "@babel/core": "^7.8.3",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "@types/react": "16.8.23",
-    "@types/react-dom": "16.8.4",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-react": "^7.12.1",
     "@babel/preset-typescript": "^7.8.3",
+    "@types/react": "16.8.23",
+    "@types/react-dom": "16.8.4",
     "babel-loader": "^8.1.0",
     "babel-preset-minify": "^0.5.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "typescript": "^3.7.5",
     "webpack": "^5.3.1",
     "webpack-cli": "^4.1.0"
