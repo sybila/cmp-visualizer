@@ -69,7 +69,6 @@ export default class Visualizer extends React.Component<
     super(props);
 
     this.Data = new DataSource(this.props.inputData);
-    console.log(this.Data);
 
     if (this.props.models.length > 2) this.props.models.length = 2;
 
@@ -126,6 +125,10 @@ export default class Visualizer extends React.Component<
       xDataset: "0",
       exportFormat: "",
     };
+  }
+
+  componentDidUpdate() {
+    this.Data = new DataSource(this.props.inputData);
   }
 
   // Changes visibility of one trace in the graph.
@@ -228,9 +231,9 @@ export default class Visualizer extends React.Component<
             if (model.get("orig").linkedData)
               return model.get("orig").linkedData;
 
-            return (model.model
-              ? this.Data.findModels
-              : this.Data.findExperiments)(model.id);
+            return (
+              model.model ? this.Data.findModels : this.Data.findExperiments
+            )(model.id);
           })
         )
       ).forEach((modelArr: any) => {
