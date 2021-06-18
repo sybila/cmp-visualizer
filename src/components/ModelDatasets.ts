@@ -8,6 +8,8 @@ export class ModelDatasets extends React.Component<any, any> {
   render() {
     const props = this.props;
 
+    const datasets = this.props.model.get("orig").datasets;
+
     return React.createElement(
       "div",
       null,
@@ -15,17 +17,19 @@ export class ModelDatasets extends React.Component<any, any> {
         "p",
         { className: "vis-datasets-p" },
         "Datasets: ",
-        this.props.model.get("orig").datasets.map((dset, key) =>
-          React.createElement(Button, {
-            key,
-            text: dset.name,
-            color: this.props.model.getIn(["datasetsVisibility", key])
-              .buttonColor,
-            action() {
-              props.actions.toggleDatasetVisibility(props.modelIndex, key);
-            },
-          })
-        )
+        datasets && datasets.length > 0
+          ? datasets.map((dset, key) =>
+              React.createElement(Button, {
+                key,
+                text: dset.name,
+                color: this.props.model.getIn(["datasetsVisibility", key])
+                  .buttonColor,
+                action() {
+                  props.actions.toggleDatasetVisibility(props.modelIndex, key);
+                },
+              })
+            )
+          : null
       )
     );
   }
