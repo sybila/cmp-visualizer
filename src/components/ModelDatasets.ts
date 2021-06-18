@@ -16,8 +16,8 @@ export class ModelDatasets extends React.Component<any, any> {
       React.createElement(
         "p",
         { className: "vis-datasets-p" },
-        "Datasets: ",
-        datasets && datasets.length > 0
+        datasets && datasets.length > 1 ? "Datasets: " : null,
+        datasets && datasets.length > 1
           ? datasets.map((dset, key) =>
               React.createElement(Button, {
                 key,
